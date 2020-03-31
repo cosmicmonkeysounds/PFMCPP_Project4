@@ -42,7 +42,131 @@ send me a DM to check your pull request
  */
 
 #include <iostream>
+
+struct IntType
+{
+    int add( int lhs, int rhs);
+    int subtract( int lhs, int rhs );
+    int multiply( int lhs, int rhs );
+    int divide( int lhs, int rhs );
+};
+
+int IntType::add( int lhs, int rhs )
+{
+    return lhs + rhs;
+}
+
+int IntType::subtract( int lhs, int rhs )
+{
+    return lhs - rhs;
+}
+
+int IntType::multiply( int lhs, int rhs )
+{
+    return lhs * rhs;
+}
+
+int IntType::divide( int lhs, int rhs)
+{
+    if( lhs == 0 || rhs == 0)
+    {
+        std::cout << "Division by 0 is not allowed! Are you trying to open up a rift in space-time or something?" << std::endl;
+        return 0;
+    }
+    return lhs / rhs;
+}
+
+struct FloatType
+{
+    float add( float lhs, float rhs );
+    float subtract( float lhs, float rhs );
+    float multiply( float lhs, float rhs );
+    float divide( float lhs, float rhs );
+};
+
+float FloatType::add( float lhs, float rhs)
+{
+    return lhs + rhs;
+}
+
+float FloatType::subtract( float lhs, float rhs)
+{
+    return lhs - rhs;
+}
+
+float FloatType::multiply( float lhs, float rhs)
+{
+    return lhs * rhs;
+}
+
+float FloatType::divide( float lhs, float rhs)
+{
+    if(lhs == 0.f || rhs == 0.f)
+    {
+        std::cout << "Warning: You are dividing by zero, you heathen." << std::endl;
+    }
+
+    return lhs / rhs;
+}
+
+struct DoubleType
+{
+    double add( double lhs, double rhs );
+    double subtract( double lhs, double rhs );
+    double multiply( double lhs, double rhs );
+    double divide( double lhs, double rhs );
+};
+
+double DoubleType::add( double lhs, double rhs)
+{
+    return lhs + rhs;
+}
+
+double DoubleType::subtract( double lhs, double rhs)
+{
+    return lhs - rhs;
+}
+
+double DoubleType::multiply( double lhs, double rhs)
+{
+    return lhs * rhs;
+}
+
+double DoubleType::divide( double lhs, double rhs)
+{
+    if(lhs == 0. || rhs == 0.)
+    {
+        std::cout << "Warning: You are dividing by zero, you lunatic." << std::endl;
+    }
+
+    return lhs / rhs;
+}
+
 int main()
 {
     std::cout << "good to go!" << std::endl;
+
+    IntType it;
+    auto intResult = it.add(1, 2);
+    std::cout << "1 + 2 is: " << intResult << std::endl;
+    std::cout << "1 - 2 is: " << it.subtract(1, 2) << std::endl;
+    std::cout << "1 * 2 is: " << it.multiply(1, 2) << std::endl;
+    std::cout << "1 / 2 is: " << it.divide(1, 2) << std::endl;
+    std::cout << "0 / 2 is: " << it.divide(0, 2) << std::endl;
+
+    FloatType ft;
+    auto floatResult = ft.add(2.5f, 4.5f);
+    std::cout << "2.5 + 4.5 is: " << floatResult << std::endl;
+    std::cout << "4.6 - 2.1 is: " << ft.subtract(4.6f, 2.1f) << std::endl;
+    std::cout << "3.2 * 2.1 is: " << ft.multiply(3.2f, 2.1f) << std::endl;
+    std::cout << "1.2 / 100.23 is: " << ft.divide(1.2f, 100.23f) << std::endl;
+    std::cout << "20.1 / 0 is: " << ft.divide(20.1f, 0.f) << std::endl;
+
+    DoubleType dt;
+    auto doubleResult = dt.add(2.5, 4.5);
+    std::cout << "2.5 + 4.5 is: " << doubleResult << std::endl;
+    std::cout << "1.2 - 2.1 is: " << dt.subtract(1.2, 2.1) << std::endl;
+    std::cout << "3.2 * 2.1 is: " << dt.multiply(3.2, 2.1) << std::endl;
+    std::cout << "1.2 / 100.23 is: " << dt.divide(1.2, 100.23) << std::endl;
+    std::cout << "20.1 / 0 is: " << dt.divide(20.1, 0.) << std::endl;
 }
