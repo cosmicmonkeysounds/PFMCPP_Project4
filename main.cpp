@@ -68,7 +68,7 @@ int IntType::multiply( int lhs, int rhs )
 
 int IntType::divide( int lhs, int rhs)
 {
-    if( lhs == 0 || rhs == 0)
+    if(rhs == 0)
     {
         std::cout << "Division by 0 is not allowed! Are you trying to open up a rift in space-time or something?" << std::endl;
         return 0;
@@ -101,7 +101,7 @@ float FloatType::multiply( float lhs, float rhs)
 
 float FloatType::divide( float lhs, float rhs)
 {
-    if(lhs == 0.f || rhs == 0.f)
+    if(rhs == 0.f)
     {
         std::cout << "Warning: You are dividing by zero, you heathen." << std::endl;
     }
@@ -134,7 +134,7 @@ double DoubleType::multiply( double lhs, double rhs)
 
 double DoubleType::divide( double lhs, double rhs)
 {
-    if(lhs == 0. || rhs == 0.)
+    if(rhs == 0.)
     {
         std::cout << "Warning: You are dividing by zero, you lunatic." << std::endl;
     }
