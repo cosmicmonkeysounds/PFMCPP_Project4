@@ -16,11 +16,17 @@ New/This/Pointers/References conclusion
 
 
 
+struct A {};
 
+struct HeapA
+{
+    A* a = new A();
 
-
-
-
+    ~HeapA()
+    {
+        delete a;
+    }
+};
 
 
 
@@ -69,50 +75,89 @@ send me a DM to check your pull request
 
 #include <iostream>
 
+struct FloatType; 
+struct DoubleType;
+
 struct IntType
 {
-    int add( int lhs, int rhs);
-    int subtract( int lhs, int rhs );
-    int multiply( int lhs, int rhs );
-    int divide( int lhs, int rhs );
+    int *value = nullptr;
+
+    IntType( int x ) 
+    {
+        this->value = new int(x);
+    }
+
+    ~IntType()
+    {
+        delete this->value;
+    }
+
+    IntType& add( int y );
+    IntType& add(const FloatType& ft);
+    IntType& subtract( int y );
+    IntType& multiply( int y );
+    IntType& divide( int y );
 };
 
-int IntType::add( int lhs, int rhs )
+IntType& IntType::add( int y )
 {
-    return lhs + rhs;
+    *this->value += y;
+    return *this;
 }
 
-int IntType::subtract( int lhs, int rhs )
+IntType& IntType::add( const FloatType& ft )
 {
-    return lhs - rhs;
+    *this->value += static_cast<int>( *ft.value );
+    return *this;
 }
 
-int IntType::multiply( int lhs, int rhs )
+IntType& IntType::subtract( int y )
 {
-    return lhs * rhs;
+    *this->value -= y;
+    return *this;
 }
 
-int IntType::divide( int lhs, int rhs)
+IntType& IntType::multiply( int y )
+{   
+    *this->value *= y;
+    return *this;
+}
+
+IntType& IntType::divide( int y )
 {
-    if(rhs == 0)
+    if( y == 0 )
     {
         std::cout << "Division by 0 is not allowed! Are you trying to open up a rift in space-time or something?" << std::endl;
-        return 0;
+        *this->value = 0;
     }
-    return lhs / rhs;
+    *this->value /= y;
+    return *this;
 }
 
 struct FloatType
 {
-    float add( float lhs, float rhs );
+    float *value = nullptr;
+
+    FloatType ( float val )
+    {
+        this->value = new float(val);
+    }
+
+    ~FloatType()
+    {
+        delete value;
+    }
+
+    FloatType& add( float y );
     float subtract( float lhs, float rhs );
     float multiply( float lhs, float rhs );
     float divide( float lhs, float rhs );
 };
 
-float FloatType::add( float lhs, float rhs)
+FloatType& FloatType::add( float y )
 {
-    return lhs + rhs;
+    *this->value += y;
+    return *this;
 }
 
 float FloatType::subtract( float lhs, float rhs)
@@ -172,17 +217,17 @@ int main()
 {
     std::cout << "good to go!" << std::endl;
 
-    IntType it;
-    auto intResult = it.add(1, 2);
-    std::cout << "1 + 2 is: " << intResult << std::endl;
-    std::cout << "1 - 2 is: " << it.subtract(1, 2) << std::endl;
-    std::cout << "1 * 2 is: " << it.multiply(1, 2) << std::endl;
-    std::cout << "1 / 2 is: " << it.divide(1, 2) << std::endl;
-    std::cout << "0 / 2 is: " << it.divide(0, 2) << std::endl;
+    IntType it(3);
+    it.add(2);
+    std::cout << "3 + 2 is: " << *it.value << std::endl;
+    it.subtract(2).add(1);
+    std::cout << "minus 2 add 1 is: " << *it.value << std::endl;
+    std::cout << "multiplied by 2, divided by 3, add 1, subtract 100 is:  " << 
+    *it.multiply(2).divide(3).add(1).subtract(100).value << std::endl;
 
-    FloatType ft;
-    auto floatResult = ft.add(2.5f, 4.5f);
-    std::cout << "2.5 + 4.5 is: " << floatResult << std::endl;
+    FloatType ft(1.f);
+    ft.add(4.5f);
+    std::cout << "1 + 4.5 is: " << *ft.value << std::endl;
     std::cout << "4.6 - 2.1 is: " << ft.subtract(4.6f, 2.1f) << std::endl;
     std::cout << "3.2 * 2.1 is: " << ft.multiply(3.2f, 2.1f) << std::endl;
     std::cout << "1.2 / 100.23 is: " << ft.divide(1.2f, 100.23f) << std::endl;
