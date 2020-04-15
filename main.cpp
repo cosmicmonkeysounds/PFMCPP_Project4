@@ -223,7 +223,7 @@ IntType& IntType::subtract( const DoubleType& dt )
 
 IntType& IntType::multiply( int y )
 {   
-    *this->value *= y;
+    *value *= y;
     return *this;
 }
 
@@ -252,7 +252,7 @@ IntType& IntType::divide( int y )
 
     else
     {
-        *this->value /= y;
+        *value /= y;
     }
     
     return *this;
@@ -275,7 +275,7 @@ IntType& IntType::divide( const DoubleType& dt )
 
 FloatType& FloatType::add( float y )
 {
-    *this->value += y;
+    *value += y;
     return *this;
 }
 
@@ -296,7 +296,7 @@ FloatType& FloatType::add( const DoubleType& dt )
 
 FloatType& FloatType::subtract( float y )
 {
-    *this->value -= y;
+    *value -= y;
     return *this;
 }
 
@@ -317,7 +317,7 @@ FloatType& FloatType::subtract( const DoubleType& dt )
 
 FloatType& FloatType::multiply( float y )
 {
-    *this->value *= y;
+    *value *= y;
     return *this;
 }
 
@@ -342,7 +342,7 @@ FloatType& FloatType::divide( float y )
     {
         std::cout << "Warning: You are dividing by zero, you heathen." << "\n";
     }
-    *this->value /= y;
+    *value /= y;
     return *this;
 }
 
@@ -363,7 +363,7 @@ FloatType& FloatType::divide( const DoubleType& dt )
 
 DoubleType& DoubleType::add( double y )
 {
-    *this->value += y;
+    *value += y;
     return *this;
 }
 
@@ -384,7 +384,7 @@ DoubleType& DoubleType::add( const DoubleType& dt )
 
 DoubleType& DoubleType::subtract( double y )
 {
-    *this->value -= y;
+    *value -= y;
     return *this;
 }
 
@@ -405,7 +405,7 @@ DoubleType& DoubleType::subtract( const DoubleType& dt )
 
 DoubleType& DoubleType::multiply( double y )
 {
-    *this->value *= y;
+    *value *= y;
     return *this;
 }
 
@@ -430,7 +430,7 @@ DoubleType& DoubleType::divide( double y )
     {
         std::cout << "Warning: You are dividing by zero, you lunatic." << "\n";
     }
-    *this->value /= y;
+    *value /= y;
     return *this;
 }
 
