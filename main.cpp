@@ -15,7 +15,6 @@ New/This/Pointers/References conclusion
  */
 
 
-
 struct A {};
 
 struct HeapA
@@ -27,7 +26,6 @@ struct HeapA
         delete a;
     }
 };
-
 
 
  /*
@@ -69,8 +67,6 @@ send me a DM to check your pull request
 
  Wait for my code review.
  */
-
-
 
 
 #include <iostream>
@@ -185,50 +181,44 @@ struct DoubleType
 
 IntType& IntType::add( int y )
 {
-    *this->value += y;
+    *value += y;
     return *this;
 }
 
 IntType& IntType::add( const IntType& it )
 {
-    *value += *it.value;
-    return *this;
+    return add( *it.value );
 }
 
 IntType& IntType::add( const FloatType& ft )
 {
-    *value += static_cast<int>( *ft.value );
-    return *this;
+    return add( static_cast<int>( *ft.value ) );
 }
 
 IntType& IntType::add( const DoubleType& dt )
 {
-    *value += static_cast<int>( *dt.value );
-    return *this;
+    return add( static_cast<int>( *dt.value ) );
 }
 
 IntType& IntType::subtract( int y )
 {
-    *this->value -= y;
+    *value -= y;
     return *this;
 }
 
 IntType& IntType::subtract( const IntType& it )
 {
-    *value -= *it.value;
-    return *this;
+    return subtract( *it.value );
 }
 
 IntType& IntType::subtract( const FloatType& ft )
 {
-    *value -= static_cast<int>( *ft.value );
-    return *this;
+    return subtract( static_cast<int>( *ft.value ) );
 }
 
 IntType& IntType::subtract( const DoubleType& dt )
 {
-    *value -= static_cast<int>( *dt.value );
-    return *this;
+    return subtract( static_cast<int>( *dt.value ) );
 }
 
 IntType& IntType::multiply( int y )
@@ -239,20 +229,17 @@ IntType& IntType::multiply( int y )
 
 IntType& IntType::multiply( const IntType& it )
 {
-    *value *= *it.value;
-    return *this;
+    return multiply( *it.value );
 }
 
 IntType& IntType::multiply( const FloatType& ft )
 {
-    *value *= static_cast<int>( *ft.value );
-    return *this;
+    return multiply( static_cast<int>( *ft.value ) );
 }
 
 IntType& IntType::multiply( const DoubleType& dt )
 {
-    *value *= static_cast<int>( *dt.value );
-    return *this;
+    return multiply( static_cast<int>( *dt.value ) );
 }
 
 IntType& IntType::divide( int y )
@@ -261,7 +248,6 @@ IntType& IntType::divide( int y )
     if( y == 0 )
     {
         std::cout << "Division by 0 is not allowed! Are you trying to open up a rift in space-time or something?" << "\n";
-        *this->value = 0;
     }
 
     else
@@ -274,54 +260,17 @@ IntType& IntType::divide( int y )
 
 IntType& IntType::divide( const IntType& it )
 {
-
-    if( *it.value == 0 )
-    {
-        std::cout << "Division by 0 is not allowed! Are you trying to open up a rift in space-time or something?" << "\n";
-        *this->value = 0;
-    }
-
-    else
-    {
-        *this->value /= *it.value;
-    }
-    
-    return *this;
+    return divide( *it.value );
 }
 
 IntType& IntType::divide( const FloatType& ft )
 {
-    int castVal = static_cast<int>( *ft.value );
-
-    if( castVal == 0 )
-    {
-        std::cout << "Division by 0 is not allowed! Are you trying to open up a rift in space-time or something?" << "\n";
-        *this->value = 0;
-    }
-
-    else
-    {
-        *this->value /= castVal;
-    }
-    
-    return *this;
+    return divide( static_cast<int>( *ft.value ) );
 }
 
 IntType& IntType::divide( const DoubleType& dt )
 {
-    int castVal = static_cast<int>( *dt.value );
-    if( castVal == 0 )
-    {
-        std::cout << "Division by 0 is not allowed! Are you trying to open up a rift in space-time or something?" << "\n";
-        *this->value = 0;
-    }
-
-    else
-    {
-        *this->value /= castVal;
-    }
-    
-    return *this;
+    return divide( static_cast<int>( *dt.value ) );
 }
 
 FloatType& FloatType::add( float y )
@@ -332,20 +281,17 @@ FloatType& FloatType::add( float y )
 
 FloatType& FloatType::add( const IntType& it )
 {
-    *value += static_cast<float>( *it.value );
-    return *this;
+    return add( static_cast<float>( *it.value ) );
 }
 
 FloatType& FloatType::add( const FloatType& ft )
 {
-    *value += *ft.value;
-    return *this;
+    return add( *ft.value );
 }
 
 FloatType& FloatType::add( const DoubleType& dt )
 {
-    *value += static_cast<float>( *dt.value );
-    return *this;
+    return add( static_cast<float>( *dt.value ) );
 }
 
 FloatType& FloatType::subtract( float y )
@@ -356,20 +302,17 @@ FloatType& FloatType::subtract( float y )
 
 FloatType& FloatType::subtract( const IntType& it )
 {
-    *value -= static_cast<float>( *it.value );
-    return *this;
+    return subtract( static_cast<float>( *it.value ) );
 }
 
 FloatType& FloatType::subtract( const FloatType& ft )
 {
-    *value -= *ft.value;
-    return *this;
+    return subtract( *ft.value );
 }
 
 FloatType& FloatType::subtract( const DoubleType& dt )
 {
-    *value -= static_cast<float>( *dt.value );
-    return *this;
+    return subtract( static_cast<float>( *dt.value ) );
 }
 
 FloatType& FloatType::multiply( float y )
@@ -380,20 +323,17 @@ FloatType& FloatType::multiply( float y )
 
 FloatType& FloatType::multiply( const IntType& it )
 {
-    *value *= static_cast<float>( *it.value );
-    return *this;
+    return multiply( static_cast<float>( *it.value ) );
 }
 
 FloatType& FloatType::mulitply( const FloatType& ft )
 {
-    *value *= *ft.value;
-    return *this;
+    return multiply( *ft.value );
 }
 
 FloatType& FloatType::multiply( const DoubleType& dt )
 {
-    *value *= static_cast<float>( *dt.value );
-    return *this;
+    return multiply( static_cast<float>( *dt.value ) );
 }
 
 FloatType& FloatType::divide( float y )
@@ -408,32 +348,17 @@ FloatType& FloatType::divide( float y )
 
 FloatType& FloatType::divide( const IntType& it )
 {
-    if( *it.value == 0 )
-    {
-        std::cout << "Warning: You are dividing by zero, you heathen." << "\n";
-    }
-    *value /= static_cast<float>( *it.value );
-    return *this;
+    return divide( static_cast<float>( *it.value ) );
 }
 
 FloatType& FloatType::divide( const FloatType& ft )
 {
-    if( *ft.value == 0.f )
-    {
-        std::cout << "Warning: You are dividing by zero, you heathen." << "\n";
-    }
-    *value /= *ft.value;
-    return *this;
+    return divide( *ft.value );
 }
 
 FloatType& FloatType::divide( const DoubleType& dt )
 {
-    if( *dt.value == 0. )
-    {
-        std::cout << "Warning: You are dividing by zero, you heathen." << "\n";
-    }
-    *value /= static_cast<float>( *dt.value );
-    return *this;
+    return divide( static_cast<float>( *dt.value ) );
 }
 
 DoubleType& DoubleType::add( double y )
@@ -444,20 +369,17 @@ DoubleType& DoubleType::add( double y )
 
 DoubleType& DoubleType::add( const IntType& it )
 {
-    *value += static_cast<double>( *it.value );
-    return *this;
+    return add( static_cast<double>( *it.value ) );
 }
 
 DoubleType& DoubleType::add( const FloatType& ft )
 {
-    *value += static_cast<double>( *ft.value );
-    return *this;
+    return add( static_cast<double>( *ft.value ) );
 }
 
 DoubleType& DoubleType::add( const DoubleType& dt )
 {
-    *value += *dt.value;
-    return *this;
+    return add( *dt.value );
 }
 
 DoubleType& DoubleType::subtract( double y )
@@ -468,20 +390,17 @@ DoubleType& DoubleType::subtract( double y )
 
 DoubleType& DoubleType::subtract( const IntType& it )
 {
-    *value -= static_cast<double>( *it.value );
-    return *this;
+    return subtract( static_cast<double>( *it.value ) );
 }
 
 DoubleType& DoubleType::subtract( const FloatType& ft )
 {
-    *value -= static_cast<double>( *ft.value );
-    return *this;
+    return subtract( static_cast<double>( *ft.value ) );
 }
 
 DoubleType& DoubleType::subtract( const DoubleType& dt )
 {
-    *value -= *dt.value;
-    return *this;
+    return subtract( *dt.value );
 }
 
 DoubleType& DoubleType::multiply( double y )
@@ -492,20 +411,17 @@ DoubleType& DoubleType::multiply( double y )
 
 DoubleType& DoubleType::multiply( const IntType& it )
 {
-    *value *= static_cast<double>( *it.value );
-    return *this;
+    return multiply( static_cast<double>( *it.value ) );
 }
 
 DoubleType& DoubleType::multiply( const FloatType& ft )
 {
-    *value *= static_cast<double>( *ft.value );
-    return *this;
+    return multiply( static_cast<double>( *ft.value ) );
 }
 
 DoubleType& DoubleType::multiply( const DoubleType& dt )
 {
-    *value *= *dt.value;
-    return *this;
+    return multiply( *dt.value );
 }
 
 DoubleType& DoubleType::divide( double y )
@@ -520,32 +436,17 @@ DoubleType& DoubleType::divide( double y )
 
 DoubleType& DoubleType::divide( const IntType& it )
 {
-    if( *it.value == 0 )
-    {
-        std::cout << "Warning: You are dividing by zero, you lunatic." << "\n";
-    }
-    *this->value /= static_cast<double>( *it.value );
-    return *this;
+    return divide( static_cast<double>( *it.value ) );
 }
 
 DoubleType& DoubleType::divide( const FloatType& ft )
 {
-    if( *ft.value == 0.f )
-    {
-        std::cout << "Warning: You are dividing by zero, you lunatic." << "\n";
-    }
-    *this->value /= static_cast<double>( *ft.value );
-    return *this;
+    return divide( static_cast<double>( *ft.value ) );
 }
 
 DoubleType& DoubleType::divide( const DoubleType& dt )
 {
-    if( *dt.value == 0. )
-    {
-        std::cout << "Warning: You are dividing by zero, you lunatic." << "\n";
-    }
-    *this->value /= *dt.value;
-    return *this;
+    return divide( *dt.value );
 }
 
 int main()
