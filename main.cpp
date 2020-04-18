@@ -47,7 +47,6 @@ struct DoubleType;
 
 struct IntType
 {
-    int *value = nullptr;
 
     IntType( int val ) 
     {
@@ -60,29 +59,21 @@ struct IntType
     }
 
     IntType& add( int y );
-    IntType& add( const IntType& it );
-    IntType& add( const FloatType& ft );
-    IntType& add( const DoubleType& dt );
 
     IntType& subtract( int y );
-    IntType& subtract( const IntType& it );
-    IntType& subtract( const FloatType& ft );
-    IntType& subtract( const DoubleType& dt );
 
     IntType& multiply( int y );
-    IntType& multiply( const IntType& it );
-    IntType& multiply( const FloatType& ft );
-    IntType& multiply( const DoubleType& dt );
 
     IntType& divide( int y );
-    IntType& divide( const IntType& it );
-    IntType& divide( const FloatType& ft );
-    IntType& divide( const DoubleType& dt );
+
+private:
+    int *value = nullptr;
+
 };
 
 struct FloatType
 {
-    float *value = nullptr;
+    
 
     FloatType( float val )
     {
@@ -95,29 +86,20 @@ struct FloatType
     }
 
     FloatType& add( float y );
-    FloatType& add( const IntType& it );
-    FloatType& add( const FloatType& ft );
-    FloatType& add( const DoubleType& dt );
 
     FloatType& subtract( float y );
-    FloatType& subtract( const IntType& it );
-    FloatType& subtract( const FloatType& ft );
-    FloatType& subtract( const DoubleType& dt );
 
     FloatType& multiply( float y );
-    FloatType& multiply( const IntType& it );
-    FloatType& mulitply( const FloatType& ft );
-    FloatType& multiply( const DoubleType& dt );
 
     FloatType& divide( float y );
-    FloatType& divide( const IntType& it );
-    FloatType& divide( const FloatType& ft );
-    FloatType& divide( const DoubleType& dt );
+
+private:
+    float *value = nullptr;
+
 };
 
 struct DoubleType
 {
-    double *value = nullptr;
 
     DoubleType( double val )
     {
@@ -130,24 +112,16 @@ struct DoubleType
     }
 
     DoubleType& add( double y );
-    DoubleType& add( const IntType& it );
-    DoubleType& add( const FloatType& ft );
-    DoubleType& add( const DoubleType& dt );
 
     DoubleType& subtract( double y );
-    DoubleType& subtract( const IntType& it );
-    DoubleType& subtract( const FloatType& ft );
-    DoubleType& subtract( const DoubleType& dt );
     
     DoubleType& multiply( double y );
-    DoubleType& multiply( const IntType& it );
-    DoubleType& multiply( const FloatType& ft );
-    DoubleType& multiply( const DoubleType& dt );
 
     DoubleType& divide( double y );
-    DoubleType& divide( const IntType& it );
-    DoubleType& divide( const FloatType& ft );
-    DoubleType& divide( const DoubleType& dt );
+
+private:
+    double *value = nullptr;
+
 };
 
 IntType& IntType::add( int y )
@@ -156,61 +130,16 @@ IntType& IntType::add( int y )
     return *this;
 }
 
-IntType& IntType::add( const IntType& it )
-{
-    return add( *it.value );
-}
-
-IntType& IntType::add( const FloatType& ft )
-{
-    return add( static_cast<int>( *ft.value ) );
-}
-
-IntType& IntType::add( const DoubleType& dt )
-{
-    return add( static_cast<int>( *dt.value ) );
-}
-
 IntType& IntType::subtract( int y )
 {
     *value -= y;
     return *this;
 }
 
-IntType& IntType::subtract( const IntType& it )
-{
-    return subtract( *it.value );
-}
-
-IntType& IntType::subtract( const FloatType& ft )
-{
-    return subtract( static_cast<int>( *ft.value ) );
-}
-
-IntType& IntType::subtract( const DoubleType& dt )
-{
-    return subtract( static_cast<int>( *dt.value ) );
-}
-
 IntType& IntType::multiply( int y )
 {   
     *value *= y;
     return *this;
-}
-
-IntType& IntType::multiply( const IntType& it )
-{
-    return multiply( *it.value );
-}
-
-IntType& IntType::multiply( const FloatType& ft )
-{
-    return multiply( static_cast<int>( *ft.value ) );
-}
-
-IntType& IntType::multiply( const DoubleType& dt )
-{
-    return multiply( static_cast<int>( *dt.value ) );
 }
 
 IntType& IntType::divide( int y )
@@ -229,40 +158,10 @@ IntType& IntType::divide( int y )
     return *this;
 }
 
-IntType& IntType::divide( const IntType& it )
-{
-    return divide( *it.value );
-}
-
-IntType& IntType::divide( const FloatType& ft )
-{
-    return divide( static_cast<int>( *ft.value ) );
-}
-
-IntType& IntType::divide( const DoubleType& dt )
-{
-    return divide( static_cast<int>( *dt.value ) );
-}
-
 FloatType& FloatType::add( float y )
 {
     *value += y;
     return *this;
-}
-
-FloatType& FloatType::add( const IntType& it )
-{
-    return add( static_cast<float>( *it.value ) );
-}
-
-FloatType& FloatType::add( const FloatType& ft )
-{
-    return add( *ft.value );
-}
-
-FloatType& FloatType::add( const DoubleType& dt )
-{
-    return add( static_cast<float>( *dt.value ) );
 }
 
 FloatType& FloatType::subtract( float y )
@@ -271,40 +170,10 @@ FloatType& FloatType::subtract( float y )
     return *this;
 }
 
-FloatType& FloatType::subtract( const IntType& it )
-{
-    return subtract( static_cast<float>( *it.value ) );
-}
-
-FloatType& FloatType::subtract( const FloatType& ft )
-{
-    return subtract( *ft.value );
-}
-
-FloatType& FloatType::subtract( const DoubleType& dt )
-{
-    return subtract( static_cast<float>( *dt.value ) );
-}
-
 FloatType& FloatType::multiply( float y )
 {
     *value *= y;
     return *this;
-}
-
-FloatType& FloatType::multiply( const IntType& it )
-{
-    return multiply( static_cast<float>( *it.value ) );
-}
-
-FloatType& FloatType::mulitply( const FloatType& ft )
-{
-    return multiply( *ft.value );
-}
-
-FloatType& FloatType::multiply( const DoubleType& dt )
-{
-    return multiply( static_cast<float>( *dt.value ) );
 }
 
 FloatType& FloatType::divide( float y )
@@ -317,41 +186,12 @@ FloatType& FloatType::divide( float y )
     return *this;
 }
 
-FloatType& FloatType::divide( const IntType& it )
-{
-    return divide( static_cast<float>( *it.value ) );
-}
-
-FloatType& FloatType::divide( const FloatType& ft )
-{
-    return divide( *ft.value );
-}
-
-FloatType& FloatType::divide( const DoubleType& dt )
-{
-    return divide( static_cast<float>( *dt.value ) );
-}
-
 DoubleType& DoubleType::add( double y )
 {
     *value += y;
     return *this;
 }
 
-DoubleType& DoubleType::add( const IntType& it )
-{
-    return add( static_cast<double>( *it.value ) );
-}
-
-DoubleType& DoubleType::add( const FloatType& ft )
-{
-    return add( static_cast<double>( *ft.value ) );
-}
-
-DoubleType& DoubleType::add( const DoubleType& dt )
-{
-    return add( *dt.value );
-}
 
 DoubleType& DoubleType::subtract( double y )
 {
@@ -359,40 +199,10 @@ DoubleType& DoubleType::subtract( double y )
     return *this;
 }
 
-DoubleType& DoubleType::subtract( const IntType& it )
-{
-    return subtract( static_cast<double>( *it.value ) );
-}
-
-DoubleType& DoubleType::subtract( const FloatType& ft )
-{
-    return subtract( static_cast<double>( *ft.value ) );
-}
-
-DoubleType& DoubleType::subtract( const DoubleType& dt )
-{
-    return subtract( *dt.value );
-}
-
 DoubleType& DoubleType::multiply( double y )
 {
     *value *= y;
     return *this;
-}
-
-DoubleType& DoubleType::multiply( const IntType& it )
-{
-    return multiply( static_cast<double>( *it.value ) );
-}
-
-DoubleType& DoubleType::multiply( const FloatType& ft )
-{
-    return multiply( static_cast<double>( *ft.value ) );
-}
-
-DoubleType& DoubleType::multiply( const DoubleType& dt )
-{
-    return multiply( *dt.value );
 }
 
 DoubleType& DoubleType::divide( double y )
@@ -405,38 +215,23 @@ DoubleType& DoubleType::divide( double y )
     return *this;
 }
 
-DoubleType& DoubleType::divide( const IntType& it )
-{
-    return divide( static_cast<double>( *it.value ) );
-}
-
-DoubleType& DoubleType::divide( const FloatType& ft )
-{
-    return divide( static_cast<double>( *ft.value ) );
-}
-
-DoubleType& DoubleType::divide( const DoubleType& dt )
-{
-    return divide( *dt.value );
-}
-
 int main()
 {
 
-    IntType it(3);
-    it.add(2);
-    std::cout << "\n3 + 2 is: " << *it.value << "\n";
-    it.subtract(2).add(1);
-    std::cout << "minus 2 add 1 is: " << *it.value << "\n";
-    std::cout << "multiplied by 2, divided by 3, add 1, subtract 100 is:  " << 
-    *it.multiply(2).divide(3).add(1).subtract(100).value << "\n\n";
+    // IntType it(3);
+    // it.add(2);
+    // std::cout << "\n3 + 2 is: " << *it.value << "\n";
+    // it.subtract(2).add(1);
+    // std::cout << "minus 2 add 1 is: " << *it.value << "\n";
+    // std::cout << "multiplied by 2, divided by 3, add 1, subtract 100 is:  " << 
+    // *it.multiply(2).divide(3).add(1).subtract(100).value << "\n\n";
 
-    IntType anotherInt(1);
-    FloatType ft(2.5f);
-    DoubleType dt(1.5);
-    std::cout << "1 minus 2.5f times 1.5 divide 0.5 is: " << *anotherInt.subtract(ft).divide(dt).divide(DoubleType(0.5)).value << "\n\n";
+    // IntType anotherInt(1);
+    // FloatType ft(2.5f);
+    // DoubleType dt(1.5);
+    // std::cout << "1 minus 2.5f times 1.5 divide 0.5 is: " << *anotherInt.subtract(ft).divide(dt).divide(DoubleType(0.5)).value << "\n\n";
 
-    DoubleType anotherDouble(10.2);
-    std::cout << "10.2 divide by 5.f plus 2 is: " << *anotherDouble.divide(FloatType(5.f)).add(IntType(2)).value << "\n";
+    // DoubleType anotherDouble(10.2);
+    // std::cout << "10.2 divide by 5.f plus 2 is: " << *anotherDouble.divide(FloatType(5.f)).add(IntType(2)).value << "\n";
 
 }
