@@ -38,12 +38,9 @@ send me a DM to check your pull request
  Wait for my code review.
  */
 
-
+ 
 
 #include <iostream>
-
-struct FloatType; 
-struct DoubleType;
 
 struct IntType
 {
@@ -59,12 +56,13 @@ struct IntType
     }
 
     IntType& add( int y );
-
     IntType& subtract( int y );
-
     IntType& multiply( int y );
-
     IntType& divide( int y );
+
+    operator int() { return *value; }
+    operator float() { return static_cast<float>( *value ); }
+    operator double() { return static_cast<double>( *value ); }
 
 private:
     int *value = nullptr;
@@ -86,12 +84,13 @@ struct FloatType
     }
 
     FloatType& add( float y );
-
     FloatType& subtract( float y );
-
     FloatType& multiply( float y );
-
     FloatType& divide( float y );
+
+    operator int() { return static_cast<int>( *value ); }
+    operator float() { return *value; }
+    operator double() { return static_cast<double>( *value ); }
 
 private:
     float *value = nullptr;
@@ -112,12 +111,13 @@ struct DoubleType
     }
 
     DoubleType& add( double y );
-
     DoubleType& subtract( double y );
-    
     DoubleType& multiply( double y );
-
     DoubleType& divide( double y );
+
+    operator int() { return static_cast<int>( *value ); }
+    operator float() { return static_cast<float>( *value ); }
+    operator double() { return *value; }
 
 private:
     double *value = nullptr;
@@ -217,21 +217,19 @@ DoubleType& DoubleType::divide( double y )
 
 int main()
 {
+    IntType it( 3 );
+    FloatType ft( 2.5f );
+    DoubleType dt( 26.24 );
 
-    // IntType it(3);
-    // it.add(2);
-    // std::cout << "\n3 + 2 is: " << *it.value << "\n";
-    // it.subtract(2).add(1);
-    // std::cout << "minus 2 add 1 is: " << *it.value << "\n";
-    // std::cout << "multiplied by 2, divided by 3, add 1, subtract 100 is:  " << 
-    // *it.multiply(2).divide(3).add(1).subtract(100).value << "\n\n";
+    it.subtract( ft );
+    ft.add( it ).divide( dt );
+    dt.multiply( ft.add(dt) ).add( it );
+    
+    int i = it;
+    float f = ft;
+    double d = dt;
 
-    // IntType anotherInt(1);
-    // FloatType ft(2.5f);
-    // DoubleType dt(1.5);
-    // std::cout << "1 minus 2.5f times 1.5 divide 0.5 is: " << *anotherInt.subtract(ft).divide(dt).divide(DoubleType(0.5)).value << "\n\n";
-
-    // DoubleType anotherDouble(10.2);
-    // std::cout << "10.2 divide by 5.f plus 2 is: " << *anotherDouble.divide(FloatType(5.f)).add(IntType(2)).value << "\n";
-
+    std::cout << "\nIntType: " << i; 
+    std::cout << "\nFloatType: " << f;
+    std::cout << "\nDoubeType: " << d << "\n\n";
 }
