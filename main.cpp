@@ -119,9 +119,7 @@ private:
 
 IntType& IntType::add( int y )
 {   
-    void* vp  = &y;
-    *value += *( static_cast< int* >(vp) );
-    //*value += y;
+    *value += y;
     return *this;
 }
 
