@@ -100,35 +100,42 @@ private:
 struct IntType
 {
 
-    IntType( int val ){
+    IntType( int val )
+    {
         value = new int(val);
     }
 
-    ~IntType(){
+    ~IntType()
+    {
         delete value;
         value = nullptr;
     }
 
-    void operator += (int x){
+    void operator += (int x)
+    {
         *value += x;
     }
 
-    void operator -= (int x){
+    void operator -= (int x)
+    {
         *value -= x;
     }
 
-    void operator *= (int x){
+    void operator *= (int x)
+    {
         *value *= x;
     }
 
     void operator /= (int x)
     {
         
-        if( x == 0 ){
+        if( x == 0 )
+        {
         std::cout << "Division by 0 is not allowed! Are you trying to open up a rift in space-time or something?\n";
         }
 
-        else{
+        else
+        {
             *value /= x;
         }
 
@@ -140,8 +147,6 @@ struct IntType
     IntType& pow( const DoubleType& );
 
     operator int() const { return *value; }
-    operator float() const { return static_cast<float>( *value ); }
-    operator double() const { return static_cast<double>( *value ); }
 
 private:
     int *value = nullptr;
@@ -151,24 +156,29 @@ private:
 struct FloatType
 {
     
-    FloatType( float val ){
+    FloatType( float val )
+    {
         value = new float(val);
     }
 
-    ~FloatType(){
+    ~FloatType()
+    {
         delete value;
         value = nullptr;
     }
 
-    void operator += (float x){
+    void operator += (float x)
+    {
         *value += x;
     }
 
-    void operator -= (float x){
+    void operator -= (float x)
+    {
         *value -= x;
     }
 
-    void operator *= (float x){
+    void operator *= (float x)
+    {
         *value *= x;
     }
 
@@ -185,9 +195,7 @@ struct FloatType
     FloatType& pow( const FloatType& );
     FloatType& pow( const DoubleType& );
 
-    operator int() const {return static_cast<int>( *value ); }
     operator float() const { return *value; }
-    operator double() const {return static_cast<double>( *value ); }
 
 private:
     float *value = nullptr;
@@ -209,21 +217,25 @@ struct DoubleType
         value = nullptr;
     }
 
-    void operator += (double x){
+    void operator += (double x)
+    {
         *value += x;
     }
 
-    void operator -= (double x){
+    void operator -= (double x)
+    {
         *value -= x;
     }
 
-    void operator *= (double x){
+    void operator *= (double x)
+    {
         *value *= x;
     }
 
     void operator /= (double x)
     { 
-        if( x == 0.0 ){
+        if( x == 0.0 )
+        {
         std::cout << "Dividing by 0 warning! Are you trying to open up a rift in space-time or something?\n";
         }
         *value /= x;
@@ -234,8 +246,6 @@ struct DoubleType
     DoubleType& pow( const FloatType& );
     DoubleType& pow( const DoubleType& );
 
-    operator int() const { return static_cast<int>( *value ); }
-    operator float() const { return static_cast<float>( *value ); }
     operator double() const { return *value; }
 
 private:
@@ -244,7 +254,8 @@ private:
 };
 
 
-IntType& IntType::powInternal( const int y ){   
+IntType& IntType::powInternal( const int y )
+{   
     if( value ) *value = static_cast<int>( std::pow(*value, y) );
     return *this;
 }
@@ -292,45 +303,40 @@ int main()
 {
     IntType it(3);
     it += 2;
-    int i = it;
-    std::cout << "\n3 + 2 is " << i;
+    std::cout << "\n3 + 2 is " << static_cast<int>( it );
 
     it -= 2;
     it += 1;
-    i = it;
-    std::cout << ", minus 2 add 1 is: " << i << "\n";
+    std::cout << ", minus 2 add 1 is: " << static_cast<int>( it ) << "\n";
 
     it *= 2;
     it /= 3;
     it += 1;
     it -= 100;
-    i = it;
-    std::cout << "multiplied by 2, divided by 3, add 1, subtract 100 is:  " << i << "\n\n";
+    std::cout << "multiplied by 2, divided by 3, add 1, subtract 100 is:  " << static_cast<int>( it ) << "\n\n";
 
     IntType anotherInt(1);
     FloatType ft(2.5f);
     DoubleType dt(1.5);
-    anotherInt -= ft;
-    anotherInt /= dt;
-    anotherInt /= 0.5;
-    i = anotherInt;
-    std::cout << "1 minus 2.5f times 1.5 divide 0.5 is: " << i << "\n\n";
+    anotherInt -= static_cast<int>( ft );
+    anotherInt /= static_cast<int>( dt );
+    anotherInt /= static_cast<int>( 0.5 );
+    std::cout << "1 minus 2.5f times 1.5 divide 0.5 is: " << static_cast<int>( anotherInt ) << "\n\n";
 
     DoubleType anotherDouble( 10.2 );
-    anotherDouble /= 5.f;
+    anotherDouble /= static_cast<double>( 5.f );
     anotherDouble += 2;
-    double d = anotherDouble;
-    std::cout << "10.2 divide by 5.f plus 2 is: " << d << "\n\n";
+    std::cout << "10.2 divide by 5.f plus 2 is: " << static_cast<double>( anotherDouble )  << "\n\n";
 
     IntType powInt(2);
-    i = powInt.pow(4);
-    std::cout << "2 ^ 4 is " << i;
-    i = powInt.pow( ft );
-    std::cout << ", and that to the power of 2.5 is: " << i << "\n";
+    powInt.pow(4);
+    std::cout << "2 ^ 4 is " << static_cast<int>( powInt );
+    powInt.pow( ft );
+    std::cout << ", and that to the power of 2.5 is: " << static_cast<int>( powInt ) << "\n";
 
     FloatType powF(2.4f);
-    float fit = powF.pow(2.f).pow(anotherDouble);
-    std::cout << "and (2.4 ^ 2) ^ 4.04 is: " << fit << "\n";
+    powF.pow(2.f).pow(anotherDouble);
+    std::cout << "and (2.4 ^ 2) ^ 4.04 is: " << static_cast<float>( powF ) << "\n";
 
     Point p(2, 2);
     p.toString();
