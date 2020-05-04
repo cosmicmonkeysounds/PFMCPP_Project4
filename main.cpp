@@ -131,7 +131,7 @@ struct IntType
         
         if( x == 0 )
         {
-        std::cout << "Division by 0 is not allowed! Are you trying to open up a rift in space-time or something?\n";
+            std::cout << "Division by 0 is not allowed! Are you trying to open up a rift in space-time or something?\n";
         }
 
         else
@@ -184,8 +184,9 @@ struct FloatType
 
     void operator /= (float x)
     { 
-        if( x == 0.f ){
-        std::cout << "Dividing by 0 warning! Are you trying to open up a rift in space-time or something?\n";
+        if( x == 0.f )
+        {
+            std::cout << "Dividing by 0 warning! Are you trying to open up a rift in space-time or something?\n";
         }
         *value /= x;
     }
@@ -236,7 +237,7 @@ struct DoubleType
     { 
         if( x == 0.0 )
         {
-        std::cout << "Dividing by 0 warning! Are you trying to open up a rift in space-time or something?\n";
+            std::cout << "Dividing by 0 warning! Are you trying to open up a rift in space-time or something?\n";
         }
         *value /= x;
     }
@@ -324,7 +325,7 @@ int main()
     std::cout << "1 minus 2.5f times 1.5 divide 0.5 is: " << static_cast<int>( anotherInt ) << "\n\n";
 
     DoubleType anotherDouble( 10.2 );
-    anotherDouble /= static_cast<double>( 5.f );
+    anotherDouble /= 5.0;
     anotherDouble += 2;
     std::cout << "10.2 divide by 5.f plus 2 is: " << static_cast<double>( anotherDouble )  << "\n\n";
 
