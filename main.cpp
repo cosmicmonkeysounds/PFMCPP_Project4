@@ -131,7 +131,7 @@ struct IntType
     {
         if( intF )
         {
-            *value += intF(*this);
+            *value = intF(*this);
         }
         return *this;
     }
@@ -199,7 +199,7 @@ struct FloatType
     {
         if( floatF )
         {
-            *value += floatF(*this);
+            *value = floatF(*this);
         }
         return *this;
     }
@@ -268,7 +268,7 @@ struct DoubleType
     {
         if( doubleF )
         {
-            *value += doubleF(*this);
+            *value = doubleF(*this);
         }
         return *this;
     }
@@ -364,6 +364,8 @@ void halfDouble(DoubleType& dt)
 
 int main()
 {
+    // Operator Tests 
+
     IntType it(3);
     it += 2;
     std::cout << "\n3 + 2 is " << static_cast<int>( it );
@@ -378,6 +380,7 @@ int main()
     it -= 100;
     std::cout << "multiplied by 2, divided by 3, add 1, subtract 100 is:  " << static_cast<int>( it ) << "\n\n";
 
+    
     IntType anotherInt(1);
     FloatType ft(2.5f);
     DoubleType dt(1.5);
@@ -386,21 +389,27 @@ int main()
     anotherInt /= static_cast<int>( 0.5 );
     std::cout << "1 minus 2.5f times 1.5 divide 0.5 is: " << static_cast<int>( anotherInt ) << "\n\n";
 
+    
     DoubleType anotherDouble( 10.2 );
     anotherDouble /= 5.0;
     anotherDouble += 2;
     std::cout << "10.2 divide by 5.f plus 2 is: " << static_cast<double>( anotherDouble )  << "\n\n";
 
+    // POW tests
+    
     IntType powInt(2);
     powInt.pow(4);
     std::cout << "2 ^ 4 is " << static_cast<int>( powInt );
     powInt.pow( ft );
     std::cout << ", and that to the power of 2.5 is: " << static_cast<int>( powInt ) << "\n";
 
+    
     FloatType powF(2.4f);
     powF.pow(2.f).pow(anotherDouble);
     std::cout << "and (2.4 ^ 2) ^ 4.04 is: " << static_cast<float>( powF ) << "\n";
 
+    // Point tests
+    
     Point p(2, 2);
     p.toString();
     p.multiply(powF);
@@ -408,6 +417,8 @@ int main()
     p.multiply(3);
     p.toString();
     std::cout << "\n";
+
+    // apply() tests
 
     IntType intFree(2), intLambda(2);
     intLambda.apply( [&intLambda](IntType& x) -> IntType&
@@ -425,7 +436,7 @@ int main()
     FloatType floatFree(2.f), floatLambda(3.f);
     floatLambda.apply( [&floatLambda](FloatType& x) -> FloatType&
         {
-            floatLambda += x;
+            floatLambda /= x;
             return floatLambda;
         }
     );
@@ -434,17 +445,18 @@ int main()
     floatFree.apply(doubleFloat);
     std::cout << "Float free func result: " << floatFree << "\n\n";
 
+    
     DoubleType doubleFree(1.), doubleLambda(5.);
     doubleLambda.apply( [&doubleLambda](DoubleType& x) -> DoubleType&
         {
-            doubleLambda += x;
-            return doubleLambda;
+            doubleLambda *= x;
+            return doubleLambda.apply(halfDouble);
         }
     );
-    std::cout << "Double Lambda result: " << doubleLambda << "\n";
+    std::cout << "Double Lambda + free result: " << doubleLambda << "\n";
 
-    doubleFree.apply(halfDouble);
-    std::cout << "Double free func result: " << doubleFree << "\n\n";
+    doubleFree.apply(halfDouble).apply(halfDouble);
+    std::cout << "Chained Double free func result: " << doubleFree << "\n\n";
 
 }
 
