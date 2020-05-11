@@ -47,6 +47,7 @@ build/run to make sure you don't have any errors
 
 #include <iostream>
 #include <cmath>
+#include <functional>
 
 struct IntType; struct FloatType; struct DoubleType;
 
@@ -126,6 +127,24 @@ struct IntType
 
     operator int() const { return *value; }
 
+    IntType& apply( std::function<IntType&(IntType&)> intF)
+    {
+        if( intF )
+        {
+            *value += intF(*this);
+        }
+        return *this;
+    }
+
+    IntType& apply( void(*intF)(IntType&) )
+    {
+        if( intF )
+        {
+            intF(*this);
+        }
+        return *this;
+    }
+
 private:
     int *value = nullptr;
     IntType& powInternal( const int );
@@ -175,6 +194,24 @@ struct FloatType
     FloatType& pow( const DoubleType& );
 
     operator float() const { return *value; }
+
+    FloatType& apply( std::function<FloatType&(FloatType&)> floatF)
+    {
+        if( floatF )
+        {
+            *value += floatF(*this);
+        }
+        return *this;
+    }
+
+    FloatType& apply( void(*floatF)(FloatType&) )
+    {
+        if( floatF )
+        {
+            floatF(*this);
+        }
+        return *this;
+    }
 
 private:
     float *value = nullptr;
@@ -226,6 +263,24 @@ struct DoubleType
     DoubleType& pow( const DoubleType& );
 
     operator double() const { return *value; }
+
+    DoubleType& apply( std::function<DoubleType&(DoubleType&)> doubleF)
+    {
+        if( doubleF )
+        {
+            *value += doubleF(*this);
+        }
+        return *this;
+    }
+
+    DoubleType& apply( void(*doubleF)(DoubleType&) )
+    {
+        if( doubleF )
+        {
+            doubleF(*this);
+        }
+        return *this;
+    }
 
 private:
     double *value = nullptr;
@@ -292,6 +347,21 @@ void Point::toString() { std::cout << "\nPoint Coords:\nX: " << x << "\nY: " << 
  Wait for my code review.
  */
 
+void addInt(IntType& it)
+{
+    it += 1;
+}
+
+void doubleFloat(FloatType& ft)
+{
+    ft *= 2.f;
+}
+
+void halfDouble(DoubleType& dt)
+{
+    dt /= 2.;
+}
+
 int main()
 {
     IntType it(3);
@@ -338,5 +408,43 @@ int main()
     p.multiply(3);
     p.toString();
     std::cout << "\n";
+
+    IntType intFree(2), intLambda(2);
+    intLambda.apply( [&intLambda](IntType& x) -> IntType&
+        {
+            intLambda += x;
+            return intLambda;
+        }
+    );
+    std::cout << "Int Lambda result: " << intLambda << "\n";
+
+    intFree.apply(addInt);
+    std::cout << "Int free func result: " << intFree << "\n\n";
+
+
+    FloatType floatFree(2.f), floatLambda(3.f);
+    floatLambda.apply( [&floatLambda](FloatType& x) -> FloatType&
+        {
+            floatLambda += x;
+            return floatLambda;
+        }
+    );
+    std::cout << "Float Lambda result: " << floatLambda << "\n";
+
+    floatFree.apply(doubleFloat);
+    std::cout << "Float free func result: " << floatFree << "\n\n";
+
+    DoubleType doubleFree(1.), doubleLambda(5.);
+    doubleLambda.apply( [&doubleLambda](DoubleType& x) -> DoubleType&
+        {
+            doubleLambda += x;
+            return doubleLambda;
+        }
+    );
+    std::cout << "Double Lambda result: " << doubleLambda << "\n";
+
+    doubleFree.apply(halfDouble);
+    std::cout << "Double free func result: " << doubleFree << "\n\n";
+
 }
 
