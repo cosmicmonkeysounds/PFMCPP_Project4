@@ -127,21 +127,17 @@ struct IntType
 
     operator int() const { return *value; }
 
-    IntType& apply( std::function<IntType&(IntType&)> intF)
+    IntType& apply( std::function<IntType&(int&)> func )
     {
-        if( intF )
-        {
-            *value = intF(*this);
-        }
+        if( func ) return func(*value);
+
+        std::cout << "Warning: Can't apply a nullptr function.\n";
         return *this;
     }
 
-    IntType& apply( void(*intF)(IntType&) )
+    IntType& apply( void(*func)(int&) )
     {
-        if( intF )
-        {
-            intF(*this);
-        }
+        if( func ) func(*value);
         return *this;
     }
 
@@ -149,6 +145,7 @@ private:
     int *value = nullptr;
     IntType& powInternal( const int );
 };
+
 
 struct FloatType
 {
@@ -195,21 +192,16 @@ struct FloatType
 
     operator float() const { return *value; }
 
-    FloatType& apply( std::function<FloatType&(FloatType&)> floatF)
+    FloatType& apply( std::function<FloatType&(float&)> func )
     {
-        if( floatF )
-        {
-            *value = floatF(*this);
-        }
+        if( func ) return func(*value);
+        std::cout << "Warning: Can't apply a nullptr function.\n";
         return *this;
     }
 
-    FloatType& apply( void(*floatF)(FloatType&) )
+    FloatType& apply( void(*func)(float&) )
     {
-        if( floatF )
-        {
-            floatF(*this);
-        }
+        if( func ) func(*value);
         return *this;
     }
 
@@ -218,6 +210,7 @@ private:
     FloatType& powInternal( const float );
 
 };
+
 
 struct DoubleType
 {
@@ -264,21 +257,16 @@ struct DoubleType
 
     operator double() const { return *value; }
 
-    DoubleType& apply( std::function<DoubleType&(DoubleType&)> doubleF)
+    DoubleType& apply( std::function<DoubleType&(double&)> func )
     {
-        if( doubleF )
-        {
-            *value = doubleF(*this);
-        }
+        if( func ) return func(*value);
+        std::cout << "Warning: Can't apply a nullptr function.\n";
         return *this;
     }
 
-    DoubleType& apply( void(*doubleF)(DoubleType&) )
+    DoubleType& apply( void(*func)(double&) )
     {
-        if( doubleF )
-        {
-            doubleF(*this);
-        }
+        if( func ) func(*value);
         return *this;
     }
 
@@ -333,31 +321,19 @@ Point& Point::multiply( DoubleType& dt ) { return multiply( static_cast<float>(d
 
 void Point::toString() { std::cout << "\nPoint Coords:\nX: " << x << "\nY: " << y << "\n"; }
 
-/*
- MAKE SURE YOU ARE NOT ON THE MASTER BRANCH
+// Free Functions
 
- Commit your changes by clicking on the Source Control panel on the left, entering a message, and click [Commit and push].
- 
- If you didn't already: 
-    Make a pull request after you make your first commit
-    pin the pull request link and this repl.it link to our DM thread in a single message.
-
- send me a DM to review your pull request when the project is ready for review.
-
- Wait for my code review.
- */
-
-void addInt(IntType& it)
+void addInt(int& it)
 {
     it += 1;
 }
 
-void doubleFloat(FloatType& ft)
+void funcloat(float& ft)
 {
     ft *= 2.f;
 }
 
-void halfDouble(DoubleType& dt)
+void halfDouble(double& dt)
 {
     dt /= 2.;
 }
@@ -421,7 +397,7 @@ int main()
     // apply() tests
 
     IntType intFree(2), intLambda(2);
-    intLambda.apply( [&intLambda](IntType& x) -> IntType&
+    intLambda.apply( [&intLambda](int& x) -> IntType&
         {
             intLambda += x;
             return intLambda;
@@ -433,8 +409,8 @@ int main()
     std::cout << "Int free func result: " << intFree << "\n\n";
 
 
-    FloatType floatFree(2.f), floatLambda(3.f);
-    floatLambda.apply( [&floatLambda](FloatType& x) -> FloatType&
+    FloatType funcree(2.f), floatLambda(3.f);
+    floatLambda.apply( [&floatLambda](float& x) -> FloatType&
         {
             floatLambda /= x;
             return floatLambda;
@@ -442,12 +418,12 @@ int main()
     );
     std::cout << "Float Lambda result: " << floatLambda << "\n";
 
-    floatFree.apply(doubleFloat);
-    std::cout << "Float free func result: " << floatFree << "\n\n";
+    funcree.apply(funcloat);
+    std::cout << "Float free func result: " << funcree << "\n\n";
 
     
     DoubleType doubleFree(1.), doubleLambda(5.);
-    doubleLambda.apply( [&doubleLambda](DoubleType& x) -> DoubleType&
+    doubleLambda.apply( [&doubleLambda](double& x) -> DoubleType&
         {
             doubleLambda *= x;
             return doubleLambda.apply(halfDouble);
