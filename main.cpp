@@ -56,7 +56,7 @@ Templates and Containers
         
         - read about Knuth's algorithm here: https://www.learncpp.com/cpp-tutorial/relational-operators-and-floating-point-comparisons/
 
-        - in plain-english, you'll need to implement logic like this:
+        - in plain-english, you'll need to implement this logic:
         if your template type is an int
                 if your parameter's type is also an int
                         if your parameter is 0
