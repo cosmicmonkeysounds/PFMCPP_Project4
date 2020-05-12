@@ -47,6 +47,7 @@ build/run to make sure you don't have any errors
 
 #include <iostream>
 #include <cmath>
+#include <functional>
 
 struct IntType; struct FloatType; struct DoubleType;
 
@@ -126,10 +127,25 @@ struct IntType
 
     operator int() const { return *value; }
 
+    IntType& apply( std::function<IntType&(int&)> func )
+    {
+        if( func ) return func(*value);
+
+        std::cout << "Warning: Can't apply a nullptr function.\n";
+        return *this;
+    }
+
+    IntType& apply( void(*func)(int&) )
+    {
+        if( func ) func(*value);
+        return *this;
+    }
+
 private:
     int *value = nullptr;
     IntType& powInternal( const int );
 };
+
 
 struct FloatType
 {
@@ -176,11 +192,25 @@ struct FloatType
 
     operator float() const { return *value; }
 
+    FloatType& apply( std::function<FloatType&(float&)> func )
+    {
+        if( func ) return func(*value);
+        std::cout << "Warning: Can't apply a nullptr function.\n";
+        return *this;
+    }
+
+    FloatType& apply( void(*func)(float&) )
+    {
+        if( func ) func(*value);
+        return *this;
+    }
+
 private:
     float *value = nullptr;
     FloatType& powInternal( const float );
 
 };
+
 
 struct DoubleType
 {
@@ -226,6 +256,19 @@ struct DoubleType
     DoubleType& pow( const DoubleType& );
 
     operator double() const { return *value; }
+
+    DoubleType& apply( std::function<DoubleType&(double&)> func )
+    {
+        if( func ) return func(*value);
+        std::cout << "Warning: Can't apply a nullptr function.\n";
+        return *this;
+    }
+
+    DoubleType& apply( void(*func)(double&) )
+    {
+        if( func ) func(*value);
+        return *this;
+    }
 
 private:
     double *value = nullptr;
@@ -278,22 +321,27 @@ Point& Point::multiply( DoubleType& dt ) { return multiply( static_cast<float>(d
 
 void Point::toString() { std::cout << "\nPoint Coords:\nX: " << x << "\nY: " << y << "\n"; }
 
-/*
- MAKE SURE YOU ARE NOT ON THE MASTER BRANCH
+// Free Functions
 
- Commit your changes by clicking on the Source Control panel on the left, entering a message, and click [Commit and push].
- 
- If you didn't already: 
-    Make a pull request after you make your first commit
-    pin the pull request link and this repl.it link to our DM thread in a single message.
+void addInt(int& it)
+{
+    it += 1;
+}
 
- send me a DM to review your pull request when the project is ready for review.
+void funcloat(float& ft)
+{
+    ft *= 2.f;
+}
 
- Wait for my code review.
- */
+void halfDouble(double& dt)
+{
+    dt /= 2.;
+}
 
 int main()
 {
+    // Operator Tests 
+
     IntType it(3);
     it += 2;
     std::cout << "\n3 + 2 is " << static_cast<int>( it );
@@ -308,6 +356,7 @@ int main()
     it -= 100;
     std::cout << "multiplied by 2, divided by 3, add 1, subtract 100 is:  " << static_cast<int>( it ) << "\n\n";
 
+    
     IntType anotherInt(1);
     FloatType ft(2.5f);
     DoubleType dt(1.5);
@@ -316,21 +365,27 @@ int main()
     anotherInt /= static_cast<int>( 0.5 );
     std::cout << "1 minus 2.5f times 1.5 divide 0.5 is: " << static_cast<int>( anotherInt ) << "\n\n";
 
+    
     DoubleType anotherDouble( 10.2 );
     anotherDouble /= 5.0;
     anotherDouble += 2;
     std::cout << "10.2 divide by 5.f plus 2 is: " << static_cast<double>( anotherDouble )  << "\n\n";
 
+    // POW tests
+    
     IntType powInt(2);
     powInt.pow(4);
     std::cout << "2 ^ 4 is " << static_cast<int>( powInt );
     powInt.pow( ft );
     std::cout << ", and that to the power of 2.5 is: " << static_cast<int>( powInt ) << "\n";
 
+    
     FloatType powF(2.4f);
     powF.pow(2.f).pow(anotherDouble);
     std::cout << "and (2.4 ^ 2) ^ 4.04 is: " << static_cast<float>( powF ) << "\n";
 
+    // Point tests
+    
     Point p(2, 2);
     p.toString();
     p.multiply(powF);
@@ -338,5 +393,46 @@ int main()
     p.multiply(3);
     p.toString();
     std::cout << "\n";
+
+    // apply() tests
+
+    IntType intFree(2), intLambda(2);
+    intLambda.apply( [&intLambda](int& x) -> IntType&
+        {
+            intLambda += x;
+            return intLambda;
+        }
+    );
+    std::cout << "Int Lambda result: " << intLambda << "\n";
+
+    intFree.apply(addInt);
+    std::cout << "Int free func result: " << intFree << "\n\n";
+
+
+    FloatType funcree(2.f), floatLambda(3.f);
+    floatLambda.apply( [&floatLambda](float& x) -> FloatType&
+        {
+            floatLambda /= x;
+            return floatLambda;
+        }
+    );
+    std::cout << "Float Lambda result: " << floatLambda << "\n";
+
+    funcree.apply(funcloat);
+    std::cout << "Float free func result: " << funcree << "\n\n";
+
+    
+    DoubleType doubleFree(1.), doubleLambda(5.);
+    doubleLambda.apply( [&doubleLambda](double& x) -> DoubleType&
+        {
+            doubleLambda *= x;
+            return doubleLambda.apply(halfDouble);
+        }
+    );
+    std::cout << "Double Lambda + free result: " << doubleLambda << "\n";
+
+    doubleFree.apply(halfDouble).apply(halfDouble);
+    std::cout << "Chained Double free func result: " << doubleFree << "\n\n";
+
 }
 
