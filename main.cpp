@@ -77,6 +77,9 @@ If you need to view an example, see: https://bitbucket.org/MatkatMusic/pfmcpptas
 #include <iostream>
 #include <cmath>
 #include <functional>
+#include <memory>
+#include <limits>
+#include <typeinfo>
 
 struct IntType; struct FloatType; struct DoubleType;
 
@@ -105,19 +108,165 @@ private:
 
 };
 
+template<typename T>
+class Numeric
+{
+public:
+
+    using Primitive = T;
+
+    Numeric( Primitive val ) : value( new Primitive(val) ) {}
+
+    Numeric& operator += ( Primitive val )
+    {
+        *value += val;
+        return *this;
+    }
+
+    Numeric& operator -= ( Primitive val )
+    {
+        *value -= val;
+        return *this;
+    }
+
+    Numeric& operator *= ( Primitive val )
+    {
+        *value *= val;
+        return *this;
+    }
+
+    Numeric& operator /= ( Primitive val )
+    {   
+
+        if constexpr ( (std::is_same<Primitive, int>::value) && val == 0 )
+        { 
+            std::cout << "Division by 0 is not allowed with integers! Are you trying to open up a rift in space-time or something?\n";
+            return *this;
+        }
+
+        else if ( val < std::numeric_limits<Primitive>::epsilon() )
+        {
+            std::cout << "Warning, dividing by 0.\n";
+        }
+
+        *value /= val;
+        return *this;
+    } 
+
+    operator Primitive() const { return *value; }
+
+    Numeric& apply( std::function< Numeric&( std::unique_ptr<Primitive>& ) > func )
+    {
+        if ( func ) return func( value );
+        std::cout << "Warning: Can't apply a null pointer function.\n";
+        return *this;
+    }
+
+    Numeric& apply( void(*func)(Primitive&) )
+    {
+        if ( func != nullptr ) func( *value );
+        return *this;
+    }
+
+    Numeric& pow( const Primitive val )
+    {
+        return powInternal( val );
+    }
+
+    template<typename AnotherType>
+    Numeric& pow( const AnotherType& val )
+    {
+        return powInternal( static_cast<Primitive>(val) );
+    }
+
+private:
+
+    std::unique_ptr<Primitive> value; 
+
+    Numeric& powInternal( const Primitive val )
+    {
+        if( value ) *value = static_cast<Primitive>( std::pow(*value, val) );
+        return *this;
+    }
+    
+};
+
+template<>
+class Numeric<double>
+{
+public:
+
+    using Primitive = double;
+
+    Numeric( Primitive val ) : value( new Primitive(val) ) {}
+
+    Numeric& operator += ( Primitive val )
+    {
+        *value += val;
+        return *this;
+    }
+
+    Numeric& operator -= ( Primitive val )
+    {
+        *value -= val;
+        return *this;
+    }
+
+    Numeric& operator *= ( Primitive val )
+    {
+        *value *= val;
+        return *this;
+    }
+
+    Numeric& operator /= ( Primitive val )
+    {   
+        if ( val < std::numeric_limits<Primitive>::epsilon() )
+        {
+            std::cout << "Warning, dividing by 0.\n";
+        }
+
+        *value /= val;
+        return *this;
+    } 
+
+        operator Primitive() const { return *value; }
+
+
+    template<typename Callable>
+    Numeric& apply( Callable func )
+    {
+        if ( func ) return func( value );
+        std::cout << "Warning: Can't apply a null pointer function.\n";
+        return *this;
+    }
+
+    Numeric& pow( const Primitive val )
+    {
+        return powInternal( val );
+    }
+
+    template<typename AnotherType>
+    Numeric& pow( const AnotherType& val )
+    {
+        return powInternal( static_cast<Primitive>(val) );
+    }
+
+private:
+
+    std::unique_ptr<Primitive> value; 
+
+    Numeric& powInternal( const Primitive val )
+    {
+        if( value ) *value = static_cast<Primitive>( std::pow(*value, val) );
+        return *this;
+    }
+
+};
+
 struct IntType
 {
 
-    IntType( int val )
-    {
-        value = new int(val);
-    }
-
-    ~IntType()
-    {
-        delete value;
-        value = nullptr;
-    }
+    IntType( int val ) : value( std::make_unique<int>(val) ) {}
 
     void operator += (int x)
     {
@@ -171,7 +320,7 @@ struct IntType
     }
 
 private:
-    int *value = nullptr;
+    std::unique_ptr<int> value = nullptr;
     IntType& powInternal( const int );
 };
 
@@ -179,16 +328,7 @@ private:
 struct FloatType
 {
     
-    FloatType( float val )
-    {
-        value = new float(val);
-    }
-
-    ~FloatType()
-    {
-        delete value;
-        value = nullptr;
-    }
+    FloatType( float val ) : value( std::make_unique<float>(val) ) {}
 
     void operator += (float x)
     {
@@ -235,7 +375,7 @@ struct FloatType
     }
 
 private:
-    float *value = nullptr;
+    std::unique_ptr<float> value = nullptr;
     FloatType& powInternal( const float );
 
 };
@@ -244,16 +384,7 @@ private:
 struct DoubleType
 {
 
-    DoubleType( double val )
-    {
-        value = new double(val);
-    }
-
-    ~DoubleType()
-    {
-        delete value;
-        value = nullptr;
-    }
+    DoubleType( double val ) : value( std::make_unique<double>(val) ) {}
 
     void operator += (double x)
     {
@@ -300,7 +431,7 @@ struct DoubleType
     }
 
 private:
-    double *value = nullptr;
+    std::unique_ptr<double> value = nullptr;
     DoubleType& powInternal( const double );
 };
 
@@ -328,7 +459,6 @@ FloatType& FloatType::pow( const IntType& it )    { return powInternal( static_c
 FloatType& FloatType::pow( const FloatType& ft )  { return powInternal( static_cast<float>(ft) ); }
 FloatType& FloatType::pow( const DoubleType& dt ) { return powInternal( static_cast<float>(dt) ); }
 
-
 DoubleType& DoubleType::powInternal( const double y )
 {   
     if( value ) { *value = static_cast<double>( std::pow(*value, y) ); }
@@ -352,6 +482,12 @@ void Point::toString() { std::cout << "\nPoint Coords:\nX: " << x << "\nY: " << 
 
 // Free Functions
 
+template<typename T>
+void freeFuncDouble(std::unique_ptr<T>& val)
+{
+    val = static_cast<T>( val * 2 );
+}
+
 void addInt(int& it)
 {
     it += 1;
@@ -371,9 +507,9 @@ int main()
 {
     // Operator Tests 
 
-    IntType it(3);
+    Numeric<int> it{3};
     it += 2;
-    std::cout << "\n3 + 2 is " << static_cast<int>( it );
+    std::cout << "\n3 + 2 is " << it;
 
     it -= 2;
     it += 1;
@@ -462,6 +598,20 @@ int main()
 
     doubleFree.apply(halfDouble).apply(halfDouble);
     std::cout << "Chained Double free func result: " << doubleFree << "\n\n";
+
+    std::cout << "Part 7\n-------------------\n\n";
+
+    Numeric<double> doubleNumeric{2.4};
+
+    doubleNumeric += Numeric<int>{2};
+    std::cout << "2.4 + 2 is: " << doubleNumeric << "\n";
+
+    // doubleNumeric.apply( [&doubleNumeric](double& x) -> double&
+    //     { 
+    //         x = (x + x * 0.0001) / x; 
+    //         return x;
+    //     }
+    // );
 
 }
 
