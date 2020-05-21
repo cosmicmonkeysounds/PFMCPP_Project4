@@ -139,7 +139,6 @@ public:
 
     Numeric& operator /= ( const Primitive val )
     {   
-
         if constexpr ( std::is_same< Primitive, int >::value )
         { 
             if constexpr ( std::is_same< decltype(val), const int >::value )
@@ -150,15 +149,12 @@ public:
                     return *this;
                 } 
             }
-            
             else if ( val < std::numeric_limits<Primitive>::epsilon() )
             {
                 std::cout << "Division by 0 is not allowed with integers! Are you trying to open up a rift in space-time or something?\n";
                 return *this;            
             }
-
         }
-
         else if ( val < std::numeric_limits<Primitive>::epsilon() )
         {
             std::cout << "Warning, dividing by 0.\n";
@@ -365,11 +361,10 @@ int main()
     using IntType = decltype(intLambda);
 
     intLambda.apply( [&intLambda](std::unique_ptr<IntType::Primitive> &x) -> Numeric<int>&
-        {
-            intLambda += *x;
-            return intLambda;
-        }
-    );
+    {
+        intLambda += *x;
+        return intLambda;
+    });
     std::cout << "Int Lambda result: " << intLambda << "\n";
 
     intFree.apply(freeFuncDouble<IntType::Primitive>);
@@ -380,11 +375,10 @@ int main()
     using FloatType = decltype(floatLambda);
 
     floatLambda.apply( [&floatLambda](std::unique_ptr<FloatType::Primitive> &x) -> Numeric<float>&
-        {
-            floatLambda /= *x;
-            return floatLambda;
-        }
-    );
+    {
+        floatLambda /= *x;
+        return floatLambda;
+    });
     std::cout << "Float Lambda result: " << floatLambda << "\n";
 
     floatFuncFree.apply(freeFuncDouble<FloatType::Primitive>);
@@ -395,10 +389,9 @@ int main()
     using DoubleType = decltype(doubleLambda);
 
     doubleLambda.apply( [&doubleLambda](std::unique_ptr<DoubleType::Primitive> &x) -> void
-        {
-            doubleLambda *= *x;
-        }
-    );
+    {
+        doubleLambda *= *x;
+    });
     std::cout << "Double Lambda + free result: " << doubleLambda << "\n";
 
     doubleFree.apply(freeFuncDouble<DoubleType::Primitive>).apply(freeFuncDouble<DoubleType::Primitive>);
@@ -411,10 +404,9 @@ int main()
     std::cout << "2.4 + 2 is: " << doubleNumeric << "\n";
 
     doubleNumeric.apply( []( std::unique_ptr<dtNumeric::Primitive> &x ) -> void
-        { 
-            *x = (*x + *x * 0.0001) / *x; 
-        }
-    );
+    { 
+        *x = (*x + *x * 0.0001) / *x; 
+    });
 
 }
 
