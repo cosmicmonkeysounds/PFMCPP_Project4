@@ -68,3 +68,4 @@ juce::LeakedObjectDetector<OwnerClass> JUCE_JOIN_MACRO (leakDetector, __LINE__);
 #define JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(className) \
             JUCE_DECLARE_NON_COPYABLE(className) \
             JUCE_LEAK_DETECTOR(className)
+

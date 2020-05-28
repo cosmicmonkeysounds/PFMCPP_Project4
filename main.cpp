@@ -95,9 +95,6 @@ struct Temporary
         return *this;
     }
 
-    // Temporary( const Temporary& ) = delete;
-    // Temporary& operator = (const Temporary& ) = delete;
-
     ~Temporary() = default;
     
     operator NumericType() const { /* read-only function */ return v; }
@@ -143,13 +140,11 @@ private:
 };
 
 template<typename T>
-class Numeric
+struct Numeric
 {
-public:
-
     using Primitive = Temporary<T>;
 
-    Numeric( Primitive val ) : value( std::make_unique<Primitive>(val) ) {}
+    Numeric( Primitive val ) :  value( new Primitive(std::move(val)) ) {}
 
     Numeric( Numeric&& otherNum ) : value( std::move(otherNum.value) ) {}
 
@@ -160,9 +155,6 @@ public:
     }
     
     ~Numeric() = default;
-
-    // Numeric( const Numeric& ) = delete;
-    // Numeric& operator = (const Numeric& ) = delete;
 
     operator T() const { return *value; }
     operator T&() { return *value; }
