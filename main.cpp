@@ -13,13 +13,13 @@ Create a branch named Part9
  2) add these macros after the JUCE_LEAK_DETECTOR macro :
  */
 
-#define JUCE_DECLARE_NON_COPYABLE(className) \
-            className (const className&) = delete;\
-            className& operator= (const className&) = delete;
+// #define JUCE_DECLARE_NON_COPYABLE(className) \
+//             className (const className&) = delete;\
+//             className& operator= (const className&) = delete;
 
-#define JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(className) \
-            JUCE_DECLARE_NON_COPYABLE(className) \
-            JUCE_LEAK_DETECTOR(className)
+// #define JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(className) \
+//             JUCE_DECLARE_NON_COPYABLE(className) \
+//             JUCE_LEAK_DETECTOR(className)
 
 /*
  3) add JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Temporary) to the end of the  Temporary<> struct
@@ -76,6 +76,7 @@ Use a service like https://www.diffchecker.com/diff to compare your output.
 #include <memory>
 #include <limits>
 #include <typeinfo>
+#include "LeakedObjectDetector.h"
 
 template<typename NumericType>
 struct Temporary
@@ -85,6 +86,16 @@ struct Temporary
         std::cout << "I'm a Temporary<" << typeid(v).name() << "> object, #"
                   << counter++ << std::endl;
     }
+
+    Temporary( Temporary&& otherTemp ) : v( std::move(otherTemp.v) ) {}
+
+    Temporary& operator = ( Temporary&& otherTemp )
+    {
+        v = std::move( otherTemp.v );
+        return *this;
+    }
+
+    ~Temporary() = default;
     
     operator NumericType() const { /* read-only function */ return v; }
     operator NumericType&() { /* read/write function */ return v; }
@@ -92,6 +103,7 @@ struct Temporary
 private:
     static int counter;
     NumericType v;
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Temporary)
 };
 
 template<typename NumericType> 
@@ -128,13 +140,21 @@ private:
 };
 
 template<typename T>
-class Numeric
+struct Numeric
 {
-public:
-
     using Primitive = Temporary<T>;
 
-    Numeric( Primitive val ) : value( std::make_unique<Primitive>(val) ) {}
+    Numeric( Primitive val ) :  value( new Primitive(std::move(val)) ) {}
+
+    Numeric( Numeric&& otherNum ) : value( std::move(otherNum.value) ) {}
+
+    Numeric& operator = ( Numeric&& otherNum )
+    {
+        value = std::move(otherNum.value);
+        return *this;
+    }
+    
+    ~Numeric() = default;
 
     operator T() const { return *value; }
     operator T&() { return *value; }
@@ -213,7 +233,7 @@ public:
 
 private:
     std::unique_ptr<Primitive> value; 
-    
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Numeric)
 };
 
 template<typename T>
